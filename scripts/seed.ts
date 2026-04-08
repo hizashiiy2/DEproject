@@ -32,6 +32,7 @@ function seed() {
     targetDurationMinutes: 20,
     notes: "Focus on responsible use and classroom activities.",
     createdAt: now,
+    status: "active",
   };
 
   const pres2: PresentationRow = {
@@ -42,6 +43,7 @@ function seed() {
     targetDurationMinutes: 15,
     notes: "End with lessons learned and advice for applicants.",
     createdAt: now,
+    status: "draft",
   };
 
   insertPresentation(pres1);

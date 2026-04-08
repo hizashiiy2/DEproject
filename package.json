@@ -3,9 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "predev": "node scripts/ensure-node-for-next-dev.mjs",
+    "dev": "NODE_OPTIONS=--no-warnings next dev --webpack -p 3001",
+    "dev:any": "NODE_OPTIONS=--no-warnings next dev --webpack -p 3001",
+    "dev:turbo": "node scripts/ensure-node-for-next-dev.mjs && NODE_OPTIONS=--no-warnings next dev -p 3001",
+    "dev:poll": "node scripts/ensure-node-for-next-dev.mjs && WATCHPACK_POLLING=true NODE_OPTIONS=--no-warnings next dev --webpack -p 3001",
+    "dev:docker": "docker run --rm -it -p 3001:3001 -v \"$PWD\":/app -v /app/node_modules -w /app node:22-bookworm-slim bash -lc 'npm install && NODE_OPTIONS=--no-warnings exec npx next dev --webpack -p 3001 -H 0.0.0.0'",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_OPTIONS=--no-warnings next start -p 3001",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -13,16 +18,15 @@
     "db:seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
-    "better-sqlite3": "^12.8.0",
     "next": "16.2.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-icons": "^5.6.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/better-sqlite3": "^7.6.13",
-    "@types/node": "^20",
+    "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
@@ -31,5 +35,8 @@
     "tsx": "^4.21.0",
     "typescript": "^5",
     "vitest": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=20.9.0 <24"
   }
 }

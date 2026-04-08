@@ -1,21 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Nav } from "@/app/components/Nav";
+import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Presentation Rehearsal Coach",
-  description: "Track presentations, section timing, and rehearsal runs.",
+  title: "DEproject — Presentation rehearsal",
+  description:
+    "Refine delivery, manage timing, and track rehearsals with structured preparation.",
 };
 
 /** SQLite and server actions require Node; avoid DB access during static generation. */
@@ -28,13 +30,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100">
-        <Nav />
-        <main className="flex-1">{children}</main>
+    <html lang="en" className={`${inter.variable} ${manrope.variable} h-full`}>
+      <body className="min-h-full bg-surface font-sans text-on-surface antialiased selection:bg-primary-fixed selection:text-on-primary-fixed-variant">
+        {children}
       </body>
     </html>
   );

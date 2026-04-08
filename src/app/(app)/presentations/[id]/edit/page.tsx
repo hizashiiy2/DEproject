@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPresentationById } from "@/lib/repository";
 import { PresentationEditForm } from "./edit-form";
+import { AcademicBreadcrumb } from "@/app/components/AcademicBreadcrumb";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -13,19 +14,26 @@ export default async function EditPresentationPage({ params }: Props) {
   }
 
   return (
-    <div className="mx-auto max-w-xl px-4 py-10 sm:px-6">
-      <div className="mb-8">
+    <div className="mx-auto max-w-xl px-6 py-10">
+      <AcademicBreadcrumb
+        items={[
+          { label: "Presentations", href: "/presentations" },
+          { label: presentation.title, href: `/presentations/${presentation.id}` },
+          { label: "Edit" },
+        ]}
+      />
+      <div className="mt-6">
         <Link
           href={`/presentations/${presentation.id}`}
-          className="text-sm text-stone-600 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100"
+          className="text-sm text-on-surface-variant hover:text-primary"
         >
           ← Back to presentation
         </Link>
-        <h1 className="mt-4 text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-100">
+        <h1 className="mt-4 font-headline text-3xl font-extrabold tracking-tight text-on-surface">
           Edit presentation
         </h1>
       </div>
-      <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-800 dark:bg-stone-900">
+      <div className="tonal-depth mt-8 rounded-xl bg-surface-container-lowest p-8">
         <PresentationEditForm presentation={presentation} />
       </div>
     </div>

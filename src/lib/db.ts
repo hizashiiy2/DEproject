@@ -1,11 +1,11 @@
 import fs from "fs";
 import path from "path";
-import Database from "better-sqlite3";
+import { DatabaseSync } from "node:sqlite";
 
-let db: Database.Database | null = null;
+let db: DatabaseSync | null = null;
 
-function runMigrations(database: Database.Database) {
-  database.pragma("foreign_keys = ON");
+function runMigrations(database: DatabaseSync) {
+  database.exec("PRAGMA foreign_keys = ON");
   database.exec(`
     CREATE TABLE IF NOT EXISTS presentations (
       id TEXT PRIMARY KEY,
@@ -39,9 +39,17 @@ function runMigrations(database: Database.Database) {
     CREATE INDEX IF NOT EXISTS idx_sections_presentation ON presentation_sections(presentationId);
     CREATE INDEX IF NOT EXISTS idx_runs_presentation ON rehearsal_runs(presentationId);
   `);
+  const cols = database
+    .prepare(`PRAGMA table_info(presentations)`)
+    .all() as { name: string }[];
+  if (!cols.some((c) => c.name === "status")) {
+    database.exec(
+      `ALTER TABLE presentations ADD COLUMN status TEXT NOT NULL DEFAULT 'active'`,
+    );
+  }
 }
 
-export function getDb(): Database.Database {
+export function getDb(): DatabaseSync {
   if (db) {
     return db;
   }
@@ -51,7 +59,7 @@ export function getDb(): Database.Database {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
-  const instance = new Database(dbPath);
+  const instance = new DatabaseSync(dbPath);
   runMigrations(instance);
   db = instance;
   return instance;

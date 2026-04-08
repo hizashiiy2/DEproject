@@ -6,6 +6,10 @@ import { FieldErrors } from "@/app/components/FieldErrors";
 
 type Props = { presentationId: string };
 
+const label = "text-xs font-bold uppercase tracking-wider text-on-surface-variant";
+const input =
+  "mt-1 w-full rounded-t-xl border-0 border-b-2 border-outline-variant/40 bg-surface-container-lowest px-3 py-2 text-sm text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10";
+
 export function AddSectionForm({ presentationId }: Props) {
   const [state, formAction, pending] = useActionState(
     addSectionAction,
@@ -13,10 +17,13 @@ export function AddSectionForm({ presentationId }: Props) {
   );
 
   return (
-    <form action={formAction} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+    <form
+      action={formAction}
+      className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end"
+    >
       <input type="hidden" name="presentationId" value={presentationId} />
       <div className="min-w-[12rem] flex-1">
-        <label htmlFor="section-title" className="block text-xs font-medium text-stone-600 dark:text-stone-400">
+        <label htmlFor="section-title" className={label}>
           Section title
         </label>
         <input
@@ -24,15 +31,12 @@ export function AddSectionForm({ presentationId }: Props) {
           name="title"
           required
           placeholder="e.g. Introduction"
-          className="mt-1 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 shadow-sm focus:border-stone-500 focus:outline-none focus:ring-1 focus:ring-stone-500 dark:border-stone-600 dark:bg-stone-900 dark:text-stone-100"
+          className={input}
         />
         <FieldErrors errors={state?.errors} name="title" />
       </div>
       <div className="w-full sm:w-36">
-        <label
-          htmlFor="section-minutes"
-          className="block text-xs font-medium text-stone-600 dark:text-stone-400"
-        >
+        <label htmlFor="section-minutes" className={label}>
           Target (min)
         </label>
         <input
@@ -41,14 +45,14 @@ export function AddSectionForm({ presentationId }: Props) {
           type="number"
           min={1}
           required
-          className="mt-1 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 shadow-sm focus:border-stone-500 focus:outline-none focus:ring-1 focus:ring-stone-500 dark:border-stone-600 dark:bg-stone-900 dark:text-stone-100"
+          className={input}
         />
         <FieldErrors errors={state?.errors} name="targetDurationMinutes" />
       </div>
       <button
         type="submit"
         disabled={pending}
-        className="rounded-md bg-stone-200 px-4 py-2 text-sm font-medium text-stone-900 hover:bg-stone-300 disabled:opacity-50 dark:bg-stone-700 dark:text-stone-100 dark:hover:bg-stone-600"
+        className="rounded-xl bg-secondary-container px-4 py-2.5 text-sm font-bold text-on-secondary-container transition hover:opacity-90 disabled:opacity-50"
       >
         {pending ? "Adding…" : "Add section"}
       </button>

@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
   deletePresentation,
+  deleteRehearsalRun,
   deleteSection,
   getPresentationById,
   insertPresentation,
@@ -15,8 +16,10 @@ import {
 } from "@/lib/repository";
 import {
   presentationCreateSchema,
+  presentationStatusUpdateSchema,
   presentationUpdateSchema,
   rehearsalRunCreateSchema,
+  rehearsalRunDeleteSchema,
   sectionCreateSchema,
 } from "@/lib/schemas";
 import { z } from "zod";
@@ -43,6 +46,7 @@ export async function createPresentation(
     audience: formData.get("audience"),
     targetDurationMinutes: formData.get("targetDurationMinutes"),
     notes: formData.get("notes") ?? "",
+    status: formData.get("status") ?? "active",
   });
   if (!parsed.success) {
     return { errors: parsed.error.flatten().fieldErrors };
@@ -58,8 +62,10 @@ export async function createPresentation(
     targetDurationMinutes: data.targetDurationMinutes,
     notes: data.notes,
     createdAt,
+    status: data.status,
   });
-  revalidatePath("/");
+  revalidatePath("/dashboard");
+  revalidatePath("/analytics");
   revalidatePath("/presentations");
   redirect(`/presentations/${id}`);
 }
@@ -75,6 +81,7 @@ export async function updatePresentationAction(
     audience: formData.get("audience"),
     targetDurationMinutes: formData.get("targetDurationMinutes"),
     notes: formData.get("notes") ?? "",
+    status: formData.get("status") ?? "active",
   });
   if (!parsed.success) {
     return { errors: parsed.error.flatten().fieldErrors };
@@ -91,8 +98,10 @@ export async function updatePresentationAction(
     audience: data.audience,
     targetDurationMinutes: data.targetDurationMinutes,
     notes: data.notes,
+    status: data.status,
   });
-  revalidatePath("/");
+  revalidatePath("/dashboard");
+  revalidatePath("/analytics");
   revalidatePath("/presentations");
   revalidatePath(`/presentations/${data.id}`);
   redirect(`/presentations/${data.id}`);
@@ -107,7 +116,8 @@ export async function deletePresentationAction(
     return { errors: parsed.error.flatten().fieldErrors };
   }
   deletePresentation(parsed.data.id);
-  revalidatePath("/");
+  revalidatePath("/dashboard");
+  revalidatePath("/analytics");
   revalidatePath("/presentations");
   redirect("/presentations");
 }
@@ -138,6 +148,8 @@ export async function addSectionAction(
     targetDurationMinutes: data.targetDurationMinutes,
     order,
   });
+  revalidatePath("/dashboard");
+  revalidatePath("/analytics");
   revalidatePath(`/presentations/${data.presentationId}`);
   return null;
 }
@@ -154,12 +166,56 @@ export async function deleteSectionAction(
     return { errors: parsed.error.flatten().fieldErrors };
   }
   deleteSection(parsed.data.id, parsed.data.presentationId);
+  revalidatePath("/dashboard");
+  revalidatePath("/analytics");
   revalidatePath(`/presentations/${parsed.data.presentationId}`);
   return null;
 }
 
 export async function deleteSectionForm(formData: FormData) {
   await deleteSectionAction(null, formData);
+}
+
+export async function updatePresentationStatusAction(formData: FormData) {
+  const parsed = presentationStatusUpdateSchema.safeParse({
+    id: formData.get("id"),
+    status: formData.get("status"),
+  });
+  if (!parsed.success) {
+    return;
+  }
+  const { id, status } = parsed.data;
+  const existing = getPresentationById(id);
+  if (!existing) {
+    return;
+  }
+  updatePresentation({
+    id: existing.id,
+    title: existing.title,
+    topic: existing.topic,
+    audience: existing.audience,
+    targetDurationMinutes: existing.targetDurationMinutes,
+    notes: existing.notes,
+    status,
+  });
+  revalidatePath("/dashboard");
+  revalidatePath("/analytics");
+  revalidatePath("/presentations");
+  revalidatePath(`/presentations/${id}`);
+}
+
+export async function deleteRehearsalRunAction(formData: FormData) {
+  const parsed = rehearsalRunDeleteSchema.safeParse({
+    id: formData.get("id"),
+    presentationId: formData.get("presentationId"),
+  });
+  if (!parsed.success) {
+    return;
+  }
+  deleteRehearsalRun(parsed.data.id, parsed.data.presentationId);
+  revalidatePath("/dashboard");
+  revalidatePath("/analytics");
+  revalidatePath(`/presentations/${parsed.data.presentationId}`);
 }
 
 export async function createRehearsalRunAction(
@@ -172,20 +228,28 @@ export async function createRehearsalRunAction(
     actualDurationMinutes: formData.get("actualDurationMinutes"),
     confidenceRating: formData.get("confidenceRating"),
     notes: formData.get("notes") ?? "",
+    sessionType: formData.get("sessionType") ?? "",
   });
   if (!parsed.success) {
     return { errors: parsed.error.flatten().fieldErrors };
   }
   const data = parsed.data;
+  const session = data.sessionType.trim();
+  const notesBody = data.notes.trim();
+  const notes =
+    session.length > 0
+      ? `[${session}]${notesBody.length > 0 ? ` ${notesBody}` : ""}`
+      : data.notes;
   insertRehearsalRun({
     id: randomUUID(),
     presentationId: data.presentationId,
     runDate: data.runDate,
     actualDurationMinutes: data.actualDurationMinutes,
     confidenceRating: data.confidenceRating,
-    notes: data.notes,
+    notes,
   });
-  revalidatePath("/");
+  revalidatePath("/dashboard");
+  revalidatePath("/analytics");
   revalidatePath(`/presentations/${data.presentationId}`);
   redirect(`/presentations/${data.presentationId}`);
 }
