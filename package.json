@@ -4,13 +4,13 @@
   "private": true,
   "scripts": {
     "predev": "node scripts/ensure-node-for-next-dev.mjs",
-    "dev": "NODE_OPTIONS=--no-warnings next dev --webpack -p 3001",
-    "dev:any": "NODE_OPTIONS=--no-warnings next dev --webpack -p 3001",
-    "dev:turbo": "node scripts/ensure-node-for-next-dev.mjs && NODE_OPTIONS=--no-warnings next dev -p 3001",
-    "dev:poll": "node scripts/ensure-node-for-next-dev.mjs && WATCHPACK_POLLING=true NODE_OPTIONS=--no-warnings next dev --webpack -p 3001",
+    "dev": "cross-env NODE_OPTIONS=--no-warnings next dev --webpack -p 3001",
+    "dev:any": "cross-env NODE_OPTIONS=--no-warnings next dev --webpack -p 3001",
+    "dev:turbo": "node scripts/ensure-node-for-next-dev.mjs && cross-env NODE_OPTIONS=--no-warnings next dev -p 3001",
+    "dev:poll": "node scripts/ensure-node-for-next-dev.mjs && cross-env WATCHPACK_POLLING=true NODE_OPTIONS=--no-warnings next dev --webpack -p 3001",
     "dev:docker": "docker run --rm -it -p 3001:3001 -v \"$PWD\":/app -v /app/node_modules -w /app node:22-bookworm-slim bash -lc 'npm install && NODE_OPTIONS=--no-warnings exec npx next dev --webpack -p 3001 -H 0.0.0.0'",
     "build": "next build",
-    "start": "NODE_OPTIONS=--no-warnings next start -p 3001",
+    "start": "cross-env NODE_OPTIONS=--no-warnings next start -p 3001",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -25,6 +25,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^22",
     "@types/react": "^19",
