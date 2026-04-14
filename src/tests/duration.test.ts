@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { compareTargetVsActual } from "@/lib/duration";
+import { compareTargetVsActual } from "../lib/duration";
 
 describe("compareTargetVsActual", () => {
   it("returns on when within default tolerance", () => {

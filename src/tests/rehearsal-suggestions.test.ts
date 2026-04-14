@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { buildRehearsalSuggestions } from "@/lib/rehearsal-suggestions";
-
 describe("buildRehearsalSuggestions", () => {
   it("returns skip message when user skipped recording", () => {
     const s = buildRehearsalSuggestions({
@@ -22,7 +21,7 @@ describe("buildRehearsalSuggestions", () => {
       hadSpeechRecognition: false,
       skippedRecording: false,
     });
-    expect(s.some((x) => x.includes("past"))).toBe(true);
+    expect(s.some((x: string) => x.includes("past"))).toBe(true);
   });
 
   it("notes missing speech recognition support", () => {
@@ -33,7 +32,7 @@ describe("buildRehearsalSuggestions", () => {
       hadSpeechRecognition: false,
       skippedRecording: false,
     });
-    expect(s.some((x) => x.toLowerCase().includes("caption"))).toBe(true);
+    expect(s.some((x: string) => x.toLowerCase().includes("caption"))).toBe(true);
   });
 
   it("flags high filler rate when transcript available", () => {
@@ -45,6 +44,6 @@ describe("buildRehearsalSuggestions", () => {
       hadSpeechRecognition: true,
       skippedRecording: false,
     });
-    expect(s.some((x) => x.toLowerCase().includes("filler"))).toBe(true);
+    expect(s.some((x: string) => x.toLowerCase().includes("filler"))).toBe(true);
   });
 });
