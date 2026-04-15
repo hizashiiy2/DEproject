@@ -14,7 +14,7 @@ const FILLER_PATTERN = /\b(um|uh|erm|uhm|like|you know|sort of|kind of|basically
 
 /**
  * Lightweight, on-device coaching hints from timing + optional transcript.
- * No network or model—suitable for coursework and privacy-first demos.
+ * No network or model. Suitable for coursework and privacy-first demos.
  */
 export function buildRehearsalSuggestions(input: RehearsalSuggestionInput): string[] {
   const { transcript, durationSeconds, targetMinutes, hadSpeechRecognition, skippedRecording } =
@@ -23,7 +23,7 @@ export function buildRehearsalSuggestions(input: RehearsalSuggestionInput): stri
 
   if (skippedRecording) {
     suggestions.push(
-      "You skipped the live take—when you're ready, try a recorded run for pacing and filler tips.",
+      "You skipped the live take. When you're ready, try a recorded run for pacing and filler tips.",
     );
     return suggestions;
   }
@@ -34,21 +34,21 @@ export function buildRehearsalSuggestions(input: RehearsalSuggestionInput): stri
 
   if (cmp.status === "under") {
     suggestions.push(
-      `You stopped around ${Math.abs(cmp.deltaMinutes)} minute(s) short of your ${targetMinutes} min target—check whether key sections need more development.`,
+      `You stopped around ${Math.abs(cmp.deltaMinutes)} minute(s) short of your ${targetMinutes} min target. Check whether key sections need more development.`,
     );
   } else if (cmp.status === "over") {
     suggestions.push(
-      `You ran about ${cmp.deltaMinutes} minute(s) past your ${targetMinutes} min target—look for a section to trim or summarise aloud.`,
+      `You ran about ${cmp.deltaMinutes} minute(s) past your ${targetMinutes} min target. Look for a section to trim or summarise aloud.`,
     );
   } else {
     suggestions.push(
-      `Your stop time is close to your ${targetMinutes} min target—solid match between plan and delivery.`,
+      `Your stop time is close to your ${targetMinutes} min target: solid match between plan and delivery.`,
     );
   }
 
   if (!hadSpeechRecognition) {
     suggestions.push(
-      "Live captioning wasn't available (try Chromium-based browsers)—we could only score timing, not wording.",
+      "Live captioning wasn't available (try Chromium-based browsers). We could only score timing, not wording.",
     );
     return suggestions;
   }
@@ -59,7 +59,7 @@ export function buildRehearsalSuggestions(input: RehearsalSuggestionInput): stri
 
   if (wordCount === 0 && durationSeconds > 45) {
     suggestions.push(
-      "We didn't pick up speech—confirm the mic isn't muted and that you granted microphone access.",
+      "We didn't pick up speech. Confirm the mic isn't muted and that you granted microphone access.",
     );
     return suggestions;
   }
@@ -88,7 +88,7 @@ export function buildRehearsalSuggestions(input: RehearsalSuggestionInput): stri
     );
   } else if (fillerCount >= 3) {
     suggestions.push(
-      "Filler usage is noticeable but workable—mark the spots in your notes and rehearse those bridges.",
+      "Filler usage is noticeable but workable. Mark the spots in your notes and rehearse those bridges.",
     );
   }
 

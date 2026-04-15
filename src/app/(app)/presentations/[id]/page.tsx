@@ -197,7 +197,7 @@ export default async function PresentationDetailPage({ params }: Props) {
                   <div className="mt-4 flex flex-wrap justify-between gap-3 border-t border-surface-container-low pt-4 text-sm text-on-surface-variant">
                     <span>Section targets (sum)</span>
                     <span className="font-semibold text-on-surface">
-                      {sections.length === 0 ? "—" : `${sectionTotal} min`}
+                      {sections.length === 0 ? "-" : `${sectionTotal} min`}
                     </span>
                   </div>
                 </div>

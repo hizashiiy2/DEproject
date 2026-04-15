@@ -15,7 +15,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "DEproject — Presentation rehearsal",
+  title: "DEproject - Presentation rehearsal",
   description:
     "Refine delivery, manage timing, and track rehearsals with structured preparation.",
 };

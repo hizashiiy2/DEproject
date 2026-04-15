@@ -42,7 +42,7 @@ export default async function RehearsePage({ params }: Props) {
               Rehearsal session
             </h1>
             <p className="text-lg leading-relaxed text-on-surface-variant">
-              Record a take in the browser, review quick suggestions, then log how it felt—everything stays on your
+              Record a take in the browser, review quick suggestions, then log how it felt. Everything stays on your
               device until you save.
             </p>
             <p className="mt-2 text-sm text-on-surface-variant">

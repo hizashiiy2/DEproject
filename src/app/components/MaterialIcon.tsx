@@ -96,7 +96,7 @@ type Props = {
   filled?: boolean;
 };
 
-/** [outline, filled] — SVG icons aligned with Material Design / your stitch mocks (no duplicate font + ligatures). */
+/** [outline, filled]: SVG icons aligned with Material Design / your stitch mocks (no duplicate font + ligatures). */
 const ICONS: Record<string, [IconType, IconType]> = {
   add: [MdOutlineAdd, MdAdd],
   add_circle: [MdOutlineAddCircle, MdAddCircle],

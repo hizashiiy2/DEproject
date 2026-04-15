@@ -114,7 +114,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           </div>
           <div className="text-sm font-medium text-on-surface-variant">Average Confidence</div>
           <div className="font-headline mt-1 text-3xl font-black text-on-surface">
-            {avgPct === null ? "—" : `${avgPct}%`}
+            {avgPct === null ? "-" : `${avgPct}%`}
           </div>
         </div>
         <div className="group tonal-depth rounded-xl border-b-2 border-transparent bg-surface-container-lowest p-6 transition-all hover:border-primary">
@@ -125,7 +125,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           </div>
           <div className="text-sm font-medium text-on-surface-variant">Total Practice Time</div>
           <div className="font-headline mt-1 text-3xl font-black text-on-surface">
-            {totalPracticeMin === 0 ? "—" : `${practiceHours}h`}
+            {totalPracticeMin === 0 ? "-" : `${practiceHours}h`}
           </div>
         </div>
       </div>
@@ -235,7 +235,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
               <AiFeaturePlaceholder label="No AI" className="border-on-primary/30 bg-on-primary/15 text-on-primary/90" />
             </div>
             <p className="mb-4 text-sm font-medium leading-relaxed">
-              Log notes right after each rehearsal—patterns in timing and confidence show up on your analytics page
+              Log notes right after each rehearsal. Patterns in timing and confidence show up on your analytics page
               from real data only.
             </p>
             <Link

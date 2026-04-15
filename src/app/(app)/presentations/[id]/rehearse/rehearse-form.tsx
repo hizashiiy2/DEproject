@@ -149,7 +149,7 @@ export function RehearseForm({ presentationId, targetDurationMinutes }: Props) {
       });
     } catch {
       try {
-        /* Desktop webcams often reject facingMode — grab any default video device (e.g. Arch + pipewire). */
+        /* Desktop webcams often reject facingMode; grab any default video device (e.g. Arch + pipewire). */
         stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       } catch {
         try {
@@ -395,7 +395,7 @@ export function RehearseForm({ presentationId, targetDurationMinutes }: Props) {
           </div>
         </div>
         <p className="text-sm text-on-surface-variant">
-          Speak at a natural volume. Live captions (when supported) power the tips at the end— Chromium browsers work
+          Speak at a natural volume. Live captions (when supported) power the tips at the end. Chromium browsers work
           best.
         </p>
         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
@@ -476,7 +476,7 @@ export function RehearseForm({ presentationId, targetDurationMinutes }: Props) {
             </div>
             {elapsedSeconds > 0 ? (
               <p className="mt-2 text-xs text-on-surface-variant">
-                Timer showed {formatElapsed(elapsedSeconds)}—adjust if you went longer off-camera.
+                Timer showed {formatElapsed(elapsedSeconds)}. Adjust if you went longer off-camera.
               </p>
             ) : null}
             <FieldErrors errors={state?.errors} name="actualDurationMinutes" />

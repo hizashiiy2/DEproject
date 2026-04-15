@@ -205,7 +205,7 @@ export default function AnalyticsPage() {
           {
             icon: "trending_up",
             label: "Avg confidence",
-            value: avgConfidencePct === null ? "—" : `${avgConfidencePct}%`,
+            value: avgConfidencePct === null ? "-" : `${avgConfidencePct}%`,
           },
         ].map((card) => (
           <div
