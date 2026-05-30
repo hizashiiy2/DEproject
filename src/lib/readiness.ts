@@ -14,3 +14,10 @@ export type ReadinessInput = {
   sectionCount: number;
   rehearsalCount: number;
 };
+
+export type ReadinessCheck = {
+  id: string;
+  label: string;
+  done: boolean;
+  detail: string;
+};
