@@ -75,13 +75,6 @@ export default function LandingPage() {
               >
                 Get Started
               </Link>
-              <a
-                href="#features"
-                className="flex items-center gap-2 rounded-xl px-8 py-4 text-lg font-semibold text-primary transition hover:bg-surface-container-low"
-              >
-                <MaterialIcon name="play_circle" />
-                Watch Demo
-              </a>
             </div>
           </div>
           <div className="md:col-span-5">
