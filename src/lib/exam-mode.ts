@@ -56,3 +56,19 @@ export function nextPhase(phase: ExamPhase): ExamPhase {
   }
   return PHASE_ORDER[index + 1]!;
 }
+
+/** Total seconds allotted to a phase (0 for the untimed checklist/summary). */
+export function phaseDurationSeconds(phase: ExamPhase): number {
+  if (phase === "presentation" || phase === "dialogue" || phase === "evaluation") {
+    return EXAM_PHASE_SECONDS[phase];
+  }
+  return 0;
+}
+
+/** Remaining seconds, clamped to [0, total]. */
+export function computeRemaining(totalSeconds: number, elapsedSeconds: number): number {
+  const remaining = totalSeconds - elapsedSeconds;
+  if (remaining < 0) return 0;
+  if (remaining > totalSeconds) return totalSeconds;
+  return remaining;
+}
