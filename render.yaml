@@ -13,8 +13,8 @@ services:
     # --include=dev forces devDependencies (TypeScript, Tailwind) to install
     # even though Render sets NODE_ENV=production, which npm would otherwise skip.
     buildCommand: npm install --include=dev && npm run build
-    # Bind to the host/port Render provides.
-    startCommand: npx next start -H 0.0.0.0 -p $PORT
+    # Uses PORT from Render (npm run start reads process.env.PORT).
+    startCommand: npm run start
     healthCheckPath: /
     autoDeploy: true
     envVars:

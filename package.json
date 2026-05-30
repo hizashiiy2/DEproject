@@ -10,7 +10,7 @@
     "dev:poll": "node scripts/ensure-node-for-next-dev.mjs && cross-env WATCHPACK_POLLING=true NODE_OPTIONS=--no-warnings next dev --webpack -p 3001",
     "dev:docker": "docker run --rm -it -p 3001:3001 -v \"$PWD\":/app -v /app/node_modules -w /app node:22-bookworm-slim bash -lc 'npm install && NODE_OPTIONS=--no-warnings exec npx next dev --webpack -p 3001 -H 0.0.0.0'",
     "build": "next build",
-    "start": "cross-env NODE_OPTIONS=--no-warnings next start -p 3001",
+    "start": "node scripts/start-production.mjs",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
