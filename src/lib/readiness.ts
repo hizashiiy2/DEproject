@@ -21,3 +21,9 @@ export type ReadinessCheck = {
   done: boolean;
   detail: string;
 };
+
+export type ReadinessScore = {
+  completed: number;
+  total: number;
+  percent: number;
+};
