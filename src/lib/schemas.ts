@@ -71,3 +71,4 @@ export type PresentationCreateInput = z.infer<typeof presentationCreateSchema>;
 export type PresentationUpdateInput = z.infer<typeof presentationUpdateSchema>;
 export type SectionCreateInput = z.infer<typeof sectionCreateSchema>;
 export type RehearsalRunCreateInput = z.infer<typeof rehearsalRunCreateSchema>;
+export type SynopsisInput = z.infer<typeof synopsisSchema>;
