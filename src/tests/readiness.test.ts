@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeReadiness, readinessScore } from "@/lib/readiness";
+import { computeReadiness, readinessScore } from "@/domain/readiness";
 
 const fullyReady = {
   hasSynopsis: true,

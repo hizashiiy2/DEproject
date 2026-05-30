@@ -1,10 +1,10 @@
-import { initDatabase } from "../src/lib/db";
-import { seedDemoData } from "../src/lib/demo-seed";
-import { listPresentations } from "../src/lib/repository";
+import { initDatabase } from "../src/db";
+import { seedDemoData } from "../src/db/seed";
+import { listPresentations } from "../src/db/repository";
 
 async function main() {
   await initDatabase();
-  const { getDb } = await import("../src/lib/db");
+  const { getDb } = await import("../src/db");
   const database = getDb();
   database.exec(`
     DELETE FROM rehearsal_runs;

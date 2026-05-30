@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { synopsisSchema } from "@/lib/schemas";
-import { buildSynopsisMarkdown } from "@/lib/synopsis";
+import { synopsisSchema } from "@/domain/validation";
+import { buildSynopsisMarkdown } from "@/domain/synopsis";
 
 const validInput = {
   title: "DEproject — Exam rehearsal app",
