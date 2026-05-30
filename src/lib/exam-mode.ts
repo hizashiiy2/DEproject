@@ -72,3 +72,13 @@ export function computeRemaining(totalSeconds: number, elapsedSeconds: number): 
   if (remaining > totalSeconds) return totalSeconds;
   return remaining;
 }
+
+/**
+ * True when the phase is in its final stretch and the student should wrap up.
+ * Triggers in the last 60 seconds, or the last 10% for short phases.
+ */
+export function isWarning(remainingSeconds: number, totalSeconds: number): boolean {
+  if (totalSeconds <= 0 || remainingSeconds <= 0) return false;
+  const threshold = Math.min(60, Math.ceil(totalSeconds * 0.1));
+  return remainingSeconds <= threshold;
+}
