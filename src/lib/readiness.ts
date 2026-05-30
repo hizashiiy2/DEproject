@@ -76,3 +76,10 @@ export function computeReadiness(input: ReadinessInput): ReadinessCheck[] {
     },
   ];
 }
+
+export function readinessScore(checks: ReadinessCheck[]): ReadinessScore {
+  const total = checks.length;
+  const completed = checks.filter((check) => check.done).length;
+  const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+  return { completed, total, percent };
+}
