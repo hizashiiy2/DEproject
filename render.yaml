@@ -1,0 +1,33 @@
+# Render Blueprint — deploy this app as a single long-lived Node container.
+# Unlike Vercel's per-request serverless model, one container handles every
+# request, so the file-based SQLite database is shared across requests and
+# created/edited data persists for the life of the instance.
+#
+# To deploy: push this repo to GitHub, then in the Render dashboard choose
+# "New +" -> "Blueprint" and point it at the repo. Render reads this file.
+services:
+  - type: web
+    name: deproject
+    runtime: node
+    plan: free
+    # --include=dev forces devDependencies (TypeScript, Tailwind) to install
+    # even though Render sets NODE_ENV=production, which npm would otherwise skip.
+    buildCommand: npm install --include=dev && npm run build
+    # Bind to the host/port Render provides.
+    startCommand: npx next start -H 0.0.0.0 -p $PORT
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # Writable path for the SQLite file. The default (./data/app.db) also
+      # works, but on the free plan the container filesystem resets on each
+      # deploy/restart, so the demo presentation is re-seeded.
+      - key: DATABASE_PATH
+        value: ./data/app.db
+    # OPTIONAL persistent storage (paid plans only): uncomment this disk and
+    # set DATABASE_PATH above to /var/data/app.db so data survives restarts.
+    # disk:
+    #   name: data
+    #   mountPath: /var/data
+    #   sizeGB: 1
