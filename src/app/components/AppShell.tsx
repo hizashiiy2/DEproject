@@ -10,6 +10,9 @@ type NavItem = { href: string; label: string; icon: string; mobileLabel?: string
 const navItems: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
   { href: "/presentations", label: "Presentations", icon: "present_to_all", mobileLabel: "Library" },
+  { href: "/exam", label: "Exam Mode", icon: "timer", mobileLabel: "Exam" },
+  { href: "/synopsis", label: "Synopsis", icon: "history_edu", mobileLabel: "Synopsis" },
+  { href: "/readiness", label: "Readiness", icon: "reviews", mobileLabel: "Ready" },
   { href: "/analytics", label: "Analytics", icon: "analytics", mobileLabel: "Stats" },
   { href: "/settings", label: "Settings", icon: "settings" },
 ];
