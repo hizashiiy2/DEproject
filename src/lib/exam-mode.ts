@@ -30,3 +30,12 @@ export const EXAM_PHASE_LABELS: Record<ExamPhase, string> = {
   evaluation: "Evaluation",
   complete: "Summary",
 };
+
+/** Items a student confirms before the timed run begins. */
+export const EXAM_CHECKLIST: readonly string[] = [
+  "Synopsis handed in (1 page)",
+  "Two course topics chosen and rehearsed",
+  "Prototype web app builds and runs",
+  "Presentation plan / sections ready",
+  "Laptop, charger and GitHub link available",
+] as const;
