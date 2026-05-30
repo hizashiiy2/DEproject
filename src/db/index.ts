@@ -149,6 +149,7 @@ function runMigrations(database: SqlDatabase) {
       id TEXT PRIMARY KEY,
       presentationId TEXT NOT NULL,
       runDate TEXT NOT NULL,
+      startedAt TEXT NOT NULL DEFAULT '',
       actualDurationMinutes INTEGER NOT NULL,
       confidenceRating INTEGER NOT NULL CHECK (confidenceRating >= 1 AND confidenceRating <= 5),
       notes TEXT NOT NULL DEFAULT '',
@@ -179,6 +180,15 @@ function runMigrations(database: SqlDatabase) {
   if (!columns.some((c) => c.name === "dueDate")) {
     database.exec(
       "ALTER TABLE presentations ADD COLUMN dueDate TEXT NOT NULL DEFAULT ''",
+    );
+  }
+
+  const runColumns = database
+    .prepare("PRAGMA table_info(rehearsal_runs)")
+    .all() as { name: string }[];
+  if (!runColumns.some((c) => c.name === "startedAt")) {
+    database.exec(
+      "ALTER TABLE rehearsal_runs ADD COLUMN startedAt TEXT NOT NULL DEFAULT ''",
     );
   }
 }

@@ -40,6 +40,7 @@ export const sectionCreateSchema = z.object({
 export const rehearsalRunCreateSchema = z.object({
   presentationId: z.string().uuid(),
   runDate: z.string().min(1, "Date is required"),
+  startedAt: z.string().max(80).optional().default(""),
   actualDurationMinutes: positiveInt.max(24 * 60),
   confidenceRating: z.coerce
     .number()

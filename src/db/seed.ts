@@ -40,6 +40,7 @@ export function seedDemoData(): void {
     {
       presentationId,
       runDate: "2026-03-20",
+      startedAt: "2026-03-20T14:30:00.000Z",
       actualDurationMinutes: 22,
       confidenceRating: 3,
       notes: "Ran long on the demo; tighten transitions.",
@@ -47,6 +48,7 @@ export function seedDemoData(): void {
     {
       presentationId,
       runDate: "2026-03-25",
+      startedAt: "2026-03-25T15:45:00.000Z",
       actualDurationMinutes: 20,
       confidenceRating: 5,
       notes: "Hit time target; felt confident on questions.",

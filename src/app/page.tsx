@@ -16,9 +16,17 @@ import {
 import { EXAM_DATE_ISO, daysUntil } from "@/domain/exam";
 import { MaterialIcon, type IconName } from "@/components/MaterialIcon";
 
-function formatDate(iso: string): string {
-  const d = new Date(`${iso}T12:00:00`);
-  return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+function formatRunDate(runDate: string, startedAt: string): string {
+  const d = new Date(startedAt || `${runDate}T12:00:00`);
+  if (Number.isNaN(d.getTime())) {
+    return runDate;
+  }
+  return d.toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 export default async function HomePage() {
@@ -150,7 +158,7 @@ export default async function HomePage() {
                   href={`/presentations/${topPresentation.id}/rehearse`}
                   className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-bold text-on-primary transition hover:opacity-95"
                 >
-                  <MaterialIcon name="mic" className="text-sm" filled />
+                  <MaterialIcon name="videocam" className="text-sm" filled />
                   Rehearse
                 </Link>
                 <Link
@@ -177,7 +185,7 @@ export default async function HomePage() {
                     >
                       <span className="min-w-0 truncate text-on-surface">{r.presentationTitle}</span>
                       <span className="shrink-0 text-xs text-on-surface-variant">
-                        {formatDate(r.runDate)} · {r.actualDurationMinutes}m · {r.confidenceRating}/5
+                        {formatRunDate(r.runDate, r.startedAt)} · {r.actualDurationMinutes}m · {r.confidenceRating}/5
                       </span>
                     </Link>
                   </li>

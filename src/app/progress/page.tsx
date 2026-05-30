@@ -17,6 +17,20 @@ function formatDate(iso: string): string {
   return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
 
+function formatRunDate(runDate: string, startedAt: string): string {
+  const d = new Date(startedAt || `${runDate}T12:00:00`);
+  if (Number.isNaN(d.getTime())) {
+    return runDate;
+  }
+  return d.toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 type PageProps = {
   searchParams: Promise<{ q?: string | string[] }>;
 };
@@ -97,7 +111,7 @@ export default async function ProgressPage({ searchParams }: PageProps) {
                 {trend.map((r) => (
                   <div
                     key={r.id}
-                    title={`${formatDate(r.runDate)} · ${r.confidenceRating}/5`}
+                    title={`${formatRunDate(r.runDate, r.startedAt)} · ${r.confidenceRating}/5`}
                     className="academic-gradient flex-1 rounded-t"
                     style={{ height: `${(r.confidenceRating / 5) * 100}%` }}
                   />
@@ -188,7 +202,7 @@ export default async function ProgressPage({ searchParams }: PageProps) {
                           {r.presentationTitle}
                         </Link>
                         <div className="flex items-center gap-3 text-xs text-on-surface-variant">
-                          <span>{formatDate(r.runDate)}</span>
+                          <span>{formatRunDate(r.runDate, r.startedAt)}</span>
                           <span className={timingColor}>
                             {r.actualDurationMinutes}/{r.targetDurationMinutes}m
                           </span>

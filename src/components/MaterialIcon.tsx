@@ -95,6 +95,7 @@ import {
   MdOutlineTimer,
   MdOutlineTrackChanges,
   MdOutlineTrendingUp,
+  MdOutlineVideocam,
   MdPause,
   MdPlayArrow,
   MdPlayCircle,
@@ -120,6 +121,7 @@ import {
   MdTimer,
   MdTrackChanges,
   MdTrendingUp,
+  MdVideocam,
 } from "react-icons/md";
 
 const ICONS = {
@@ -186,6 +188,7 @@ const ICONS = {
   timer: [MdOutlineTimer, MdTimer],
   track_changes: [MdOutlineTrackChanges, MdTrackChanges],
   trending_up: [MdOutlineTrendingUp, MdTrendingUp],
+  videocam: [MdOutlineVideocam, MdVideocam],
 } as const satisfies Record<string, [IconType, IconType]>;
 
 export type IconName = keyof typeof ICONS;

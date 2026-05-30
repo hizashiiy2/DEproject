@@ -19,6 +19,7 @@ export async function createRehearsalRunAction(
   const parsed = rehearsalRunCreateSchema.safeParse({
     presentationId: formData.get("presentationId"),
     runDate: formData.get("runDate"),
+    startedAt: formData.get("startedAt") ?? "",
     actualDurationMinutes: formData.get("actualDurationMinutes"),
     confidenceRating: formData.get("confidenceRating"),
     notes: formData.get("notes") ?? "",
@@ -38,6 +39,7 @@ export async function createRehearsalRunAction(
     id: randomUUID(),
     presentationId: data.presentationId,
     runDate: data.runDate,
+    startedAt: data.startedAt.trim() || new Date().toISOString(),
     actualDurationMinutes: data.actualDurationMinutes,
     confidenceRating: data.confidenceRating,
     notes,

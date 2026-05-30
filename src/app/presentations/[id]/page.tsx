@@ -35,12 +35,17 @@ function confidencePct(rating: number) {
   return Math.round((rating / 5) * 100);
 }
 
-function formatRunDate(iso: string) {
-  const d = new Date(`${iso}T12:00:00`);
-  return d.toLocaleDateString(undefined, {
+function formatRunDate(runDate: string, startedAt: string) {
+  const d = new Date(startedAt || `${runDate}T12:00:00`);
+  if (Number.isNaN(d.getTime())) {
+    return runDate;
+  }
+  return d.toLocaleString(undefined, {
     month: "short",
     day: "numeric",
     year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
@@ -244,7 +249,9 @@ export default async function PresentationDetailPage({ params }: Props) {
                     >
                       <div className="mb-2 flex items-start justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="text-sm font-bold text-on-surface">{formatRunDate(run.runDate)}</p>
+                          <p className="text-sm font-bold text-on-surface">
+                            {formatRunDate(run.runDate, run.startedAt)}
+                          </p>
                           <p className="text-xs text-on-surface-variant">
                             {run.actualDurationMinutes} min total · target {presentation.targetDurationMinutes}{" "}
                             min

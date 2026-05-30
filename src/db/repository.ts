@@ -26,6 +26,7 @@ export type RehearsalRunRow = {
   id: string;
   presentationId: string;
   runDate: string;
+  startedAt: string;
   actualDurationMinutes: number;
   confidenceRating: number;
   notes: string;
@@ -150,8 +151,8 @@ export function listRehearsalRuns(presentationId: string): RehearsalRunRow[] {
   const database = getDb();
   return database
     .prepare(
-      `SELECT id, presentationId, runDate, actualDurationMinutes, confidenceRating, notes
-       FROM rehearsal_runs WHERE presentationId = ? ORDER BY runDate DESC`,
+      `SELECT id, presentationId, runDate, startedAt, actualDurationMinutes, confidenceRating, notes
+       FROM rehearsal_runs WHERE presentationId = ? ORDER BY runDate DESC, startedAt DESC, id DESC`,
     )
     .all(presentationId) as RehearsalRunRow[];
 }
@@ -160,13 +161,14 @@ export function insertRehearsalRun(row: RehearsalRunRow): void {
   const database = getDb();
   database
     .prepare(
-      `INSERT INTO rehearsal_runs (id, presentationId, runDate, actualDurationMinutes, confidenceRating, notes)
-       VALUES (?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO rehearsal_runs (id, presentationId, runDate, startedAt, actualDurationMinutes, confidenceRating, notes)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
     )
     .run(
       row.id,
       row.presentationId,
       row.runDate,
+      row.startedAt,
       row.actualDurationMinutes,
       row.confidenceRating,
       row.notes,
@@ -274,6 +276,7 @@ export type RecentActivityRow = {
   presentationId: string;
   presentationTitle: string;
   runDate: string;
+  startedAt: string;
   actualDurationMinutes: number;
   confidenceRating: number;
 };
@@ -282,11 +285,11 @@ export function listRecentActivity(limit: number): RecentActivityRow[] {
   const database = getDb();
   return database
     .prepare(
-      `SELECT r.id AS runId, r.presentationId, p.title AS presentationTitle, r.runDate,
+      `SELECT r.id AS runId, r.presentationId, p.title AS presentationTitle, r.runDate, r.startedAt,
               r.actualDurationMinutes, r.confidenceRating
        FROM rehearsal_runs r
        JOIN presentations p ON p.id = r.presentationId
-       ORDER BY r.runDate DESC, r.id DESC
+       ORDER BY r.runDate DESC, r.startedAt DESC, r.id DESC
        LIMIT ?`,
     )
     .all(limit) as RecentActivityRow[];
@@ -438,6 +441,7 @@ export type RehearsalDetail = {
   presentationId: string;
   presentationTitle: string;
   runDate: string;
+  startedAt: string;
   actualDurationMinutes: number;
   confidenceRating: number;
   targetDurationMinutes: number;
@@ -450,11 +454,11 @@ export function listRehearsalsDetailed(q?: string): RehearsalDetail[] {
   const raw = q?.trim().toLowerCase().replace(/[%_]/g, "") ?? "";
   const like = raw.length > 0 ? `%${raw}%` : null;
   const sql = `SELECT r.id, r.presentationId, p.title AS presentationTitle, r.runDate,
-                      r.actualDurationMinutes, r.confidenceRating, p.targetDurationMinutes, r.notes
+                      r.startedAt, r.actualDurationMinutes, r.confidenceRating, p.targetDurationMinutes, r.notes
                FROM rehearsal_runs r
                JOIN presentations p ON p.id = r.presentationId
                ${like ? "WHERE LOWER(p.title) LIKE ? OR LOWER(r.notes) LIKE ?" : ""}
-               ORDER BY r.runDate DESC, r.id DESC`;
+               ORDER BY r.runDate DESC, r.startedAt DESC, r.id DESC`;
   const stmt = database.prepare(sql);
   const rows = (like ? stmt.all(like, like) : stmt.all()) as RehearsalDetail[];
   return rows;

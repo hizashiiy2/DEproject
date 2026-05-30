@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ensureDynamicDb } from "@/db/ensure-dynamic";
-import { getPresentationById } from "@/db/repository";
+import { getPresentationById, listRehearsalRuns, listSections } from "@/db/repository";
 import { RehearseClient } from "./rehearse-client";
 import { MaterialIcon } from "@/components/MaterialIcon";
 
@@ -15,13 +15,16 @@ export default async function RehearsePage({ params }: Props) {
     notFound();
   }
 
+  const sections = listSections(presentation.id);
+  const history = listRehearsalRuns(presentation.id);
+
   return (
     <main className="relative flex min-h-screen items-center justify-center bg-surface p-6 md:p-12">
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -right-[10%] -top-[10%] h-[40%] w-[40%] rounded-full bg-primary/5 blur-[120px]" />
         <div className="absolute -bottom-[10%] -left-[10%] h-[40%] w-[40%] rounded-full bg-tertiary/5 blur-[120px]" />
       </div>
-      <div className="relative z-10 w-full max-w-2xl overflow-hidden rounded-xl bg-surface-container-lowest tonal-shadow">
+      <div className="relative z-10 w-full max-w-5xl overflow-hidden rounded-xl bg-surface-container-lowest tonal-shadow">
         <div className="bg-surface-container-highest/30 px-6 py-3 sm:px-8">
           <nav
             className="flex flex-wrap items-center gap-2 text-[10px] font-medium uppercase tracking-widest text-on-surface-variant"
@@ -31,7 +34,10 @@ export default async function RehearsePage({ params }: Props) {
               Presentations
             </Link>
             <MaterialIcon name="chevron_right" className="text-[12px]" />
-            <Link href={`/presentations/${presentation.id}`} className="max-w-[12rem] truncate hover:text-primary sm:max-w-none">
+            <Link
+              href={`/presentations/${presentation.id}`}
+              className="max-w-[12rem] truncate hover:text-primary sm:max-w-none"
+            >
               {presentation.title}
             </Link>
             <MaterialIcon name="chevron_right" className="text-[12px]" />
@@ -44,20 +50,36 @@ export default async function RehearsePage({ params }: Props) {
               Rehearsal session
             </h1>
             <p className="text-lg leading-relaxed text-on-surface-variant">
-              Time a run, record your voice, and jot timestamped notes as you go — then log how it
-              felt. The recording stays on your device; only your notes and timing are saved.
+              Time each section, record camera and sound, and jot timestamped notes as you go - then
+              log how it felt.
             </p>
             <p className="mt-2 text-sm text-on-surface-variant">
-              {presentation.title} · target {presentation.targetDurationMinutes} min
+              {presentation.title} - target {presentation.targetDurationMinutes} min
             </p>
           </header>
-          <RehearseClient presentationId={presentation.id} targetDurationMinutes={presentation.targetDurationMinutes} />
+          <RehearseClient
+            presentationId={presentation.id}
+            title={presentation.title}
+            targetDurationMinutes={presentation.targetDurationMinutes}
+            sections={sections.map((section) => ({
+              title: section.title,
+              targetDurationMinutes: section.targetDurationMinutes,
+            }))}
+            history={history.map((run) => ({
+              id: run.id,
+              runDate: run.runDate,
+              startedAt: run.startedAt,
+              actualDurationMinutes: run.actualDurationMinutes,
+              confidenceRating: run.confidenceRating,
+              notes: run.notes,
+            }))}
+          />
         </div>
         <div className="flex items-start gap-4 bg-tertiary-fixed/30 p-6">
           <MaterialIcon name="lightbulb" filled className="shrink-0 text-tertiary" />
           <p className="text-sm leading-snug text-on-tertiary-fixed-variant">
-            <span className="font-bold">Academic insight:</span> Students who log notes immediately after
-            practicing show a <span className="font-bold">14% higher retention rate</span> of key talking points.
+            <span className="font-bold">Academic insight:</span> Students who log notes immediately
+            after practicing retain more key talking points for the next run.
           </p>
         </div>
       </div>
