@@ -22,3 +22,11 @@ export const EXAM_PHASE_SECONDS: Record<
   dialogue: 5 * 60,
   evaluation: 5 * 60,
 };
+
+export const EXAM_PHASE_LABELS: Record<ExamPhase, string> = {
+  checklist: "Pre-exam checklist",
+  presentation: "Presentation",
+  dialogue: "Dialogue",
+  evaluation: "Evaluation",
+  complete: "Summary",
+};
