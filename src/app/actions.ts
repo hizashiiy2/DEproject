@@ -220,6 +220,39 @@ export async function deleteRehearsalRunAction(formData: FormData) {
   revalidatePath(`/presentations/${parsed.data.presentationId}`);
 }
 
+export async function saveSynopsisAction(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const parsed = synopsisSchema.safeParse({
+    title: formData.get("title"),
+    description: formData.get("description"),
+    topicOne: formData.get("topicOne"),
+    topicTwo: formData.get("topicTwo"),
+    features: formData.get("features"),
+    technologies: formData.get("technologies"),
+    githubUrl: formData.get("githubUrl") ?? "",
+    reflection: formData.get("reflection") ?? "",
+  });
+  if (!parsed.success) {
+    return { errors: parsed.error.flatten().fieldErrors };
+  }
+  const data = parsed.data;
+  upsertSynopsis({
+    title: data.title,
+    description: data.description,
+    topicOne: data.topicOne,
+    topicTwo: data.topicTwo,
+    features: data.features,
+    technologies: data.technologies,
+    githubUrl: data.githubUrl,
+    reflection: data.reflection,
+  });
+  revalidatePath("/synopsis");
+  revalidatePath("/readiness");
+  return { message: "Synopsis saved." };
+}
+
 export async function createRehearsalRunAction(
   _prev: ActionState,
   formData: FormData,
