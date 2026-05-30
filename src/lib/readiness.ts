@@ -27,3 +27,52 @@ export type ReadinessScore = {
   total: number;
   percent: number;
 };
+
+export function computeReadiness(input: ReadinessInput): ReadinessCheck[] {
+  const topicsSelected = input.hasSynopsis && input.topicCount >= 2;
+  return [
+    {
+      id: "synopsis",
+      label: "Synopsis completed",
+      done: input.hasSynopsis,
+      detail: input.hasSynopsis
+        ? "Synopsis saved in the Synopsis Builder."
+        : "Fill in and save the synopsis.",
+    },
+    {
+      id: "topics",
+      label: "2 course topics selected",
+      done: topicsSelected,
+      detail: topicsSelected
+        ? "Two topics chosen for the presentation."
+        : "Select two course topics in the synopsis.",
+    },
+    {
+      id: "presentation",
+      label: "Presentation created",
+      done: input.presentationCount > 0,
+      detail:
+        input.presentationCount > 0
+          ? `${input.presentationCount} presentation(s) in the library.`
+          : "Create a presentation to rehearse.",
+    },
+    {
+      id: "plan",
+      label: "Presentation plan created",
+      done: input.sectionCount > 0,
+      detail:
+        input.sectionCount > 0
+          ? `${input.sectionCount} section(s) planned.`
+          : "Add sections to outline your talk.",
+    },
+    {
+      id: "rehearsal",
+      label: "Rehearsal completed",
+      done: input.rehearsalCount > 0,
+      detail:
+        input.rehearsalCount > 0
+          ? `${input.rehearsalCount} rehearsal run(s) logged.`
+          : "Log at least one rehearsal run.",
+    },
+  ];
+}
