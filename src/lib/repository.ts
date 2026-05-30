@@ -308,6 +308,14 @@ export function listRecentActivity(limit: number): RecentActivityRow[] {
     .all(limit) as RecentActivityRow[];
 }
 
+export function getTotalSectionCount(): number {
+  const database = getDb();
+  const row = database
+    .prepare(`SELECT COUNT(*) AS c FROM presentation_sections`)
+    .get() as { c: number };
+  return row.c;
+}
+
 export function getTotalPracticeMinutes(): number {
   const database = getDb();
   const row = database
