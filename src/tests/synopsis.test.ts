@@ -45,3 +45,28 @@ describe("synopsisSchema", () => {
     expect(synopsisSchema.safeParse({ ...validInput, githubUrl: "" }).success).toBe(true);
   });
 });
+
+describe("buildSynopsisMarkdown", () => {
+  it("renders the title, both topics and feature bullets", () => {
+    const md = buildSynopsisMarkdown(synopsisSchema.parse(validInput));
+    expect(md).toContain("# DEproject — Exam rehearsal app");
+    expect(md).toContain("1. Web frameworks");
+    expect(md).toContain("2. Quality Assurance");
+    expect(md).toContain("- Exam Mode");
+    expect(md).toContain("- Synopsis Builder");
+  });
+
+  it("omits optional sections when empty", () => {
+    const md = buildSynopsisMarkdown(
+      synopsisSchema.parse({ ...validInput, githubUrl: "", reflection: "" }),
+    );
+    expect(md).not.toContain("## Reflection");
+    expect(md).not.toContain("## Source & deployment");
+  });
+
+  it("splits comma-separated technologies into bullets", () => {
+    const md = buildSynopsisMarkdown(synopsisSchema.parse(validInput));
+    expect(md).toContain("- Next.js");
+    expect(md).toContain("- Vitest");
+  });
+});
