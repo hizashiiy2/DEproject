@@ -38,6 +38,19 @@ function runMigrations(database: DatabaseSync) {
 
     CREATE INDEX IF NOT EXISTS idx_sections_presentation ON presentation_sections(presentationId);
     CREATE INDEX IF NOT EXISTS idx_runs_presentation ON rehearsal_runs(presentationId);
+
+    CREATE TABLE IF NOT EXISTS synopsis (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      description TEXT NOT NULL,
+      topicOne TEXT NOT NULL,
+      topicTwo TEXT NOT NULL,
+      features TEXT NOT NULL,
+      technologies TEXT NOT NULL,
+      githubUrl TEXT NOT NULL DEFAULT '',
+      reflection TEXT NOT NULL DEFAULT '',
+      updatedAt TEXT NOT NULL
+    );
   `);
   const cols = database
     .prepare(`PRAGMA table_info(presentations)`)
