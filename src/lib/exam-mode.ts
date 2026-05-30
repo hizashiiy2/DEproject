@@ -39,3 +39,20 @@ export const EXAM_CHECKLIST: readonly string[] = [
   "Presentation plan / sections ready",
   "Laptop, charger and GitHub link available",
 ] as const;
+
+const PHASE_ORDER: ExamPhase[] = [
+  "checklist",
+  "presentation",
+  "dialogue",
+  "evaluation",
+  "complete",
+];
+
+/** Returns the phase that follows `phase`; `complete` is terminal. */
+export function nextPhase(phase: ExamPhase): ExamPhase {
+  const index = PHASE_ORDER.indexOf(phase);
+  if (index < 0 || index >= PHASE_ORDER.length - 1) {
+    return "complete";
+  }
+  return PHASE_ORDER[index + 1]!;
+}
