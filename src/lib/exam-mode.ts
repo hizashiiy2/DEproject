@@ -82,3 +82,11 @@ export function isWarning(remainingSeconds: number, totalSeconds: number): boole
   const threshold = Math.min(60, Math.ceil(totalSeconds * 0.1));
   return remainingSeconds <= threshold;
 }
+
+/** Formats a non-negative second count as mm:ss. */
+export function formatClock(seconds: number): string {
+  const safe = Math.max(0, Math.floor(seconds));
+  const minutes = Math.floor(safe / 60);
+  const rest = safe % 60;
+  return `${String(minutes).padStart(2, "0")}:${String(rest).padStart(2, "0")}`;
+}
