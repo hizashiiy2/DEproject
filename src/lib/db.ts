@@ -1,22 +1,128 @@
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { DatabaseSync } from "node:sqlite";
+import initSqlJs, { type Database, type Statement } from "sql.js";
+import { seedDemoData } from "@/lib/demo-seed";
 
-let db: DatabaseSync | null = null;
+/**
+ * Minimal sync SQL surface used by the repository.
+ *
+ * Backed by sql.js (pure WASM) so the exact same code runs locally and on
+ * Vercel. We intentionally do NOT use node:sqlite: it is experimental and is
+ * not available on Vercel's Node runtime, which made every server action 500.
+ */
+export type SqlStatement = {
+  all(...params: unknown[]): unknown[];
+  get(...params: unknown[]): unknown;
+  run(...params: unknown[]): unknown;
+};
+
+export type SqlDatabase = {
+  exec(sql: string): void;
+  prepare(sql: string): SqlStatement;
+};
+
+// --- sql.js engine ----------------------------------------------------------
+
+let sqlJsModule: Awaited<ReturnType<typeof initSqlJs>> | null = null;
+
+async function loadSqlJs() {
+  if (sqlJsModule) {
+    return sqlJsModule;
+  }
+  const wasmPath = path.join(
+    process.cwd(),
+    "node_modules",
+    "sql.js",
+    "dist",
+    "sql-wasm.wasm",
+  );
+  const wasmBinary = fs.readFileSync(wasmPath);
+  sqlJsModule = await initSqlJs({ wasmBinary });
+  return sqlJsModule;
+}
+
+class WasmStatement implements SqlStatement {
+  constructor(
+    private readonly stmt: Statement,
+    private readonly persist: () => void,
+  ) {}
+
+  all(...params: unknown[]): unknown[] {
+    if (params.length > 0) {
+      this.stmt.bind(params);
+    }
+    const rows: unknown[] = [];
+    while (this.stmt.step()) {
+      rows.push(this.stmt.getAsObject());
+    }
+    this.stmt.reset();
+    return rows;
+  }
+
+  get(...params: unknown[]): unknown {
+    return this.all(...params)[0];
+  }
+
+  run(...params: unknown[]): unknown {
+    if (params.length > 0) {
+      this.stmt.run(params);
+    } else {
+      this.stmt.step();
+    }
+    this.stmt.reset();
+    this.persist();
+    return {};
+  }
+}
+
+class WasmDatabase implements SqlDatabase {
+  constructor(
+    private readonly database: Database,
+    private readonly filePath: string,
+  ) {}
+
+  exec(sql: string): void {
+    this.database.exec(sql);
+    this.persist();
+  }
+
+  prepare(sql: string): SqlStatement {
+    return new WasmStatement(this.database.prepare(sql), () => this.persist());
+  }
+
+  private persist(): void {
+    fs.mkdirSync(path.dirname(this.filePath), { recursive: true });
+    fs.writeFileSync(this.filePath, Buffer.from(this.database.export()));
+  }
+}
+
+async function createDatabase(filePath: string): Promise<SqlDatabase> {
+  const SQL = await loadSqlJs();
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  const database = fs.existsSync(filePath)
+    ? new SQL.Database(fs.readFileSync(filePath))
+    : new SQL.Database();
+  return new WasmDatabase(database, filePath);
+}
+
+// --- public API -------------------------------------------------------------
+
+let db: SqlDatabase | null = null;
+let initPromise: Promise<void> | null = null;
 
 /** Vercel serverless only allows writes under /tmp; local dev uses ./data/app.db. */
-function resolveDbPath(): string {
-  if (process.env.DATABASE_PATH) {
-    return path.resolve(process.env.DATABASE_PATH);
-  }
+export function resolveDbPath(): string {
   if (process.env.VERCEL) {
     return path.join(os.tmpdir(), "deproject.db");
+  }
+  if (process.env.DATABASE_PATH) {
+    return path.resolve(process.env.DATABASE_PATH);
   }
   return path.join(process.cwd(), "data", "app.db");
 }
 
-function runMigrations(database: DatabaseSync) {
+function runMigrations(database: SqlDatabase) {
   database.exec("PRAGMA foreign_keys = ON");
   database.exec(`
     CREATE TABLE IF NOT EXISTS presentations (
@@ -26,7 +132,8 @@ function runMigrations(database: DatabaseSync) {
       audience TEXT NOT NULL,
       targetDurationMinutes INTEGER NOT NULL,
       notes TEXT NOT NULL DEFAULT '',
-      createdAt TEXT NOT NULL
+      createdAt TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'active'
     );
 
     CREATE TABLE IF NOT EXISTS presentation_sections (
@@ -64,44 +171,36 @@ function runMigrations(database: DatabaseSync) {
       updatedAt TEXT NOT NULL
     );
   `);
-  const cols = database
-    .prepare(`PRAGMA table_info(presentations)`)
-    .all() as { name: string }[];
-  if (!cols.some((c) => c.name === "status")) {
-    database.exec(
-      `ALTER TABLE presentations ADD COLUMN status TEXT NOT NULL DEFAULT 'active'`,
-    );
-  }
 }
 
-function maybeSeedOnVercel(instance: DatabaseSync) {
-  if (!process.env.VERCEL) {
-    return;
-  }
-  const row = instance
+function seedIfEmpty(database: SqlDatabase) {
+  const row = database
     .prepare("SELECT COUNT(*) AS c FROM presentations")
     .get() as { c: number };
-  if (row.c > 0) {
-    return;
+  if (row.c === 0) {
+    seedDemoData();
   }
-  // Deferred require avoids a circular import with repository → db.
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { seedDemoData } = require("@/lib/demo-seed") as typeof import("@/lib/demo-seed");
-  seedDemoData();
 }
 
-export function getDb(): DatabaseSync {
+/** Call once per request (via ensureDynamicDb) before sync repository access. */
+export async function initDatabase(): Promise<void> {
   if (db) {
-    return db;
+    return;
   }
-  const dbPath = resolveDbPath();
-  const dir = path.dirname(dbPath);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+  if (!initPromise) {
+    initPromise = (async () => {
+      const instance = await createDatabase(resolveDbPath());
+      runMigrations(instance);
+      db = instance;
+      seedIfEmpty(instance);
+    })();
   }
-  const instance = new DatabaseSync(dbPath);
-  runMigrations(instance);
-  db = instance;
-  maybeSeedOnVercel(instance);
-  return instance;
+  await initPromise;
+}
+
+export function getDb(): SqlDatabase {
+  if (!db) {
+    throw new Error("Database not initialized. Call initDatabase() first.");
+  }
+  return db;
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ensureDynamicDb } from "@/lib/ensure-dynamic-db";
 import { compareTargetVsActual } from "@/lib/duration";
 import {
   getPresentationById,
@@ -46,6 +47,7 @@ function formatRunDate(iso: string) {
 }
 
 export default async function PresentationDetailPage({ params }: Props) {
+  await ensureDynamicDb();
   const { id } = await params;
   const presentation = getPresentationById(id);
   if (!presentation) {

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ensureDynamicDb } from "@/lib/ensure-dynamic-db";
 import { getPresentationById } from "@/lib/repository";
 import { PresentationEditForm } from "./edit-form";
 import { AcademicBreadcrumb } from "@/app/components/AcademicBreadcrumb";
@@ -7,6 +8,7 @@ import { AcademicBreadcrumb } from "@/app/components/AcademicBreadcrumb";
 type Props = { params: Promise<{ id: string }> };
 
 export default async function EditPresentationPage({ params }: Props) {
+  await ensureDynamicDb();
   const { id } = await params;
   const presentation = getPresentationById(id);
   if (!presentation) {

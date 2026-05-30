@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { AcademicBreadcrumb } from "@/app/components/AcademicBreadcrumb";
+import { ensureDynamicDb } from "@/lib/ensure-dynamic-db";
 import { MaterialIcon } from "@/app/components/MaterialIcon";
 import {
   getPresentationStatusCounts,
@@ -37,6 +38,7 @@ type PageProps = {
 };
 
 export default async function PresentationsPage({ searchParams }: PageProps) {
+  await ensureDynamicDb();
   const sp = await searchParams;
   const q = typeof sp.q === "string" ? sp.q : "";
   const sortRaw = typeof sp.sort === "string" ? sp.sort : "modified";

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AcademicBreadcrumb } from "@/app/components/AcademicBreadcrumb";
+import { ensureDynamicDb } from "@/lib/ensure-dynamic-db";
 import { MaterialIcon } from "@/app/components/MaterialIcon";
 import {
   QA_TOOLS,
@@ -17,7 +18,8 @@ export const metadata = {
   description: "Track exam deliverables and quality-assurance tooling at a glance.",
 };
 
-export default function ReadinessPage() {
+export default async function ReadinessPage() {
+  await ensureDynamicDb();
   const synopsis = getSynopsis();
   const stats = getDashboardStats();
   const sectionCount = getTotalSectionCount();

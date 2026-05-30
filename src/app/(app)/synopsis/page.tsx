@@ -1,4 +1,5 @@
 import { AcademicBreadcrumb } from "@/app/components/AcademicBreadcrumb";
+import { ensureDynamicDb } from "@/lib/ensure-dynamic-db";
 import { getSynopsis } from "@/lib/repository";
 import type { SynopsisInput } from "@/lib/schemas";
 import { SynopsisForm } from "./synopsis-form";
@@ -19,7 +20,8 @@ const EMPTY_SYNOPSIS: SynopsisInput = {
   reflection: "",
 };
 
-export default function SynopsisPage() {
+export default async function SynopsisPage() {
+  await ensureDynamicDb();
   const saved = getSynopsis();
   const initial: SynopsisInput = saved
     ? {

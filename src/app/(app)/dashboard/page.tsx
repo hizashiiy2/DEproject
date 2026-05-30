@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AcademicBreadcrumb } from "@/app/components/AcademicBreadcrumb";
+import { ensureDynamicDb } from "@/lib/ensure-dynamic-db";
 import { AiFeaturePlaceholder } from "@/app/components/AiFeaturePlaceholder";
 import { MaterialIcon } from "@/app/components/MaterialIcon";
 import { DashboardPresentationSection } from "./dashboard-presentation-section";
@@ -22,6 +23,7 @@ function confidencePercent(rating: number): number {
 type PageProps = { searchParams: Promise<{ cadence?: string }> };
 
 export default async function DashboardPage({ searchParams }: PageProps) {
+  await ensureDynamicDb();
   const sp = await searchParams;
   const cadenceDays = sp.cadence === "30" ? 30 : 7;
 

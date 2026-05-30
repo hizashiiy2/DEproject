@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AcademicBreadcrumb } from "@/app/components/AcademicBreadcrumb";
+import { ensureDynamicDb } from "@/lib/ensure-dynamic-db";
 import { AiFeaturePlaceholder } from "@/app/components/AiFeaturePlaceholder";
 import { MaterialIcon } from "@/app/components/MaterialIcon";
 import {
@@ -9,7 +10,8 @@ import {
   rehearsalCountsByWeekdayLastDays,
 } from "@/lib/repository";
 
-export default function AnalyticsPage() {
+export default async function AnalyticsPage() {
+  await ensureDynamicDb();
   const stats = getDashboardStats();
   const trend = listGlobalConfidenceTrendLastN(10);
   const maxTrend = Math.max(...trend, 1);

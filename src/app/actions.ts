@@ -3,6 +3,7 @@
 import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { ensureDynamicDb } from "@/lib/ensure-dynamic-db";
 import {
   deletePresentation,
   deleteRehearsalRun,
@@ -42,6 +43,7 @@ export async function createPresentation(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await ensureDynamicDb();
   const parsed = presentationCreateSchema.safeParse({
     title: formData.get("title"),
     topic: formData.get("topic"),
@@ -76,6 +78,7 @@ export async function updatePresentationAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await ensureDynamicDb();
   const parsed = presentationUpdateSchema.safeParse({
     id: formData.get("id"),
     title: formData.get("title"),
@@ -113,6 +116,7 @@ export async function deletePresentationAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await ensureDynamicDb();
   const parsed = idOnlySchema.safeParse({ id: formData.get("id") });
   if (!parsed.success) {
     return { errors: parsed.error.flatten().fieldErrors };
@@ -133,6 +137,7 @@ export async function addSectionAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await ensureDynamicDb();
   const parsed = sectionCreateSchema.safeParse({
     presentationId: formData.get("presentationId"),
     title: formData.get("title"),
@@ -160,6 +165,7 @@ export async function deleteSectionAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await ensureDynamicDb();
   const parsed = sectionDeleteSchema.safeParse({
     id: formData.get("id"),
     presentationId: formData.get("presentationId"),
@@ -179,6 +185,7 @@ export async function deleteSectionForm(formData: FormData) {
 }
 
 export async function updatePresentationStatusAction(formData: FormData) {
+  await ensureDynamicDb();
   const parsed = presentationStatusUpdateSchema.safeParse({
     id: formData.get("id"),
     status: formData.get("status"),
@@ -207,6 +214,7 @@ export async function updatePresentationStatusAction(formData: FormData) {
 }
 
 export async function deleteRehearsalRunAction(formData: FormData) {
+  await ensureDynamicDb();
   const parsed = rehearsalRunDeleteSchema.safeParse({
     id: formData.get("id"),
     presentationId: formData.get("presentationId"),
@@ -224,6 +232,7 @@ export async function saveSynopsisAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await ensureDynamicDb();
   const parsed = synopsisSchema.safeParse({
     title: formData.get("title"),
     description: formData.get("description"),
@@ -257,6 +266,7 @@ export async function createRehearsalRunAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await ensureDynamicDb();
   const parsed = rehearsalRunCreateSchema.safeParse({
     presentationId: formData.get("presentationId"),
     runDate: formData.get("runDate"),
