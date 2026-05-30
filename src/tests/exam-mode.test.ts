@@ -33,3 +33,17 @@ describe("nextPhase", () => {
     expect(nextPhase("complete")).toBe("complete");
   });
 });
+
+describe("phaseDurationSeconds", () => {
+  it("uses the official DE allocation for timed phases", () => {
+    expect(phaseDurationSeconds("presentation")).toBe(EXAM_PHASE_SECONDS.presentation);
+    expect(phaseDurationSeconds("presentation")).toBe(600);
+    expect(phaseDurationSeconds("dialogue")).toBe(300);
+    expect(phaseDurationSeconds("evaluation")).toBe(300);
+  });
+
+  it("returns 0 for untimed phases", () => {
+    expect(phaseDurationSeconds("checklist")).toBe(0);
+    expect(phaseDurationSeconds("complete")).toBe(0);
+  });
+});
