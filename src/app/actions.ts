@@ -13,6 +13,7 @@ import {
   insertSection,
   nextSectionOrder,
   updatePresentation,
+  upsertSynopsis,
 } from "@/lib/repository";
 import {
   presentationCreateSchema,
@@ -21,6 +22,7 @@ import {
   rehearsalRunCreateSchema,
   rehearsalRunDeleteSchema,
   sectionCreateSchema,
+  synopsisSchema,
 } from "@/lib/schemas";
 import { z } from "zod";
 
