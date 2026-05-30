@@ -1,8 +1,20 @@
 import fs from "fs";
+import os from "os";
 import path from "path";
 import { DatabaseSync } from "node:sqlite";
 
 let db: DatabaseSync | null = null;
+
+/** Vercel serverless only allows writes under /tmp; local dev uses ./data/app.db. */
+function resolveDbPath(): string {
+  if (process.env.DATABASE_PATH) {
+    return path.resolve(process.env.DATABASE_PATH);
+  }
+  if (process.env.VERCEL) {
+    return path.join(os.tmpdir(), "deproject.db");
+  }
+  return path.join(process.cwd(), "data", "app.db");
+}
 
 function runMigrations(database: DatabaseSync) {
   database.exec("PRAGMA foreign_keys = ON");
@@ -62,12 +74,27 @@ function runMigrations(database: DatabaseSync) {
   }
 }
 
+function maybeSeedOnVercel(instance: DatabaseSync) {
+  if (!process.env.VERCEL) {
+    return;
+  }
+  const row = instance
+    .prepare("SELECT COUNT(*) AS c FROM presentations")
+    .get() as { c: number };
+  if (row.c > 0) {
+    return;
+  }
+  // Deferred require avoids a circular import with repository → db.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { seedDemoData } = require("@/lib/demo-seed") as typeof import("@/lib/demo-seed");
+  seedDemoData();
+}
+
 export function getDb(): DatabaseSync {
   if (db) {
     return db;
   }
-  const dbPath =
-    process.env.DATABASE_PATH ?? path.join(process.cwd(), "data", "app.db");
+  const dbPath = resolveDbPath();
   const dir = path.dirname(dbPath);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -75,5 +102,6 @@ export function getDb(): DatabaseSync {
   const instance = new DatabaseSync(dbPath);
   runMigrations(instance);
   db = instance;
+  maybeSeedOnVercel(instance);
   return instance;
 }
