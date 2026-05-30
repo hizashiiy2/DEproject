@@ -55,3 +55,11 @@ describe("isWarning", () => {
     expect(isWarning(0, 600)).toBe(false);
   });
 });
+
+describe("formatClock", () => {
+  it("formats seconds as mm:ss", () => {
+    expect(formatClock(0)).toBe("00:00");
+    expect(formatClock(65)).toBe("01:05");
+    expect(formatClock(600)).toBe("10:00");
+  });
+});
