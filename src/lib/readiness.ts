@@ -83,3 +83,14 @@ export function readinessScore(checks: ReadinessCheck[]): ReadinessScore {
   const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
   return { completed, total, percent };
 }
+
+/**
+ * Quality-assurance tooling that ships with the project. These are configured in
+ * `package.json` (so they are genuinely "ready"); the command is shown verbatim
+ * for the exam's Quality Assurance discussion.
+ */
+export type QaTool = {
+  label: string;
+  command: string;
+  description: string;
+};
