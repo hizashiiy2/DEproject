@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MaterialIcon } from "@/components/MaterialIcon";
+import { MaterialIcon, type IconName } from "@/components/MaterialIcon";
 import type { PresentationListExtras } from "@/db/repository";
 
 const wraps = [
@@ -10,7 +10,7 @@ const wraps = [
   "bg-primary-fixed text-on-primary-fixed-variant",
   "bg-surface-container-highest text-on-surface-variant",
 ] as const;
-const icons = ["auto_stories", "science", "architecture", "history_edu"] as const;
+const icons: IconName[] = ["auto_stories", "science", "architecture", "history_edu"];
 
 type Props = {
   presentation: PresentationListExtras;

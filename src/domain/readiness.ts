@@ -1,10 +1,7 @@
 /**
- * Domain logic for the Project Readiness dashboard.
- *
  * `computeReadiness` turns plain facts about the project (does a synopsis exist,
- * how many topics are chosen, how many rehearsals were logged) into a checklist.
- * Kept pure so the rules — e.g. "synopsis is incomplete if topics are missing" —
- * can be unit-tested without a database or React.
+ * how many topics are chosen, how many rehearsals were logged) into the readiness
+ * checklist shown on Home. Kept pure so the rules can be unit-tested without a DB.
  */
 
 export type ReadinessInput = {

@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MaterialIcon } from "@/components/MaterialIcon";
+import { MaterialIcon, type IconName } from "@/components/MaterialIcon";
 
-type NavItem = { href: string; label: string; icon: string; mobileLabel?: string };
+type NavItem = { href: string; label: string; icon: IconName; mobileLabel?: string };
 
 const navItems: NavItem[] = [
   { href: "/", label: "Home", icon: "home" },

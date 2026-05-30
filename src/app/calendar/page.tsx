@@ -85,7 +85,6 @@ export default async function CalendarPage({ searchParams }: PageProps) {
         </div>
       </div>
 
-      {/* Legend */}
       <div className="mt-6 flex flex-wrap gap-4 text-xs text-on-surface-variant">
         <span className="flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-full bg-primary" /> Due date
@@ -98,7 +97,6 @@ export default async function CalendarPage({ searchParams }: PageProps) {
         </span>
       </div>
 
-      {/* Grid */}
       <div className="mt-4 overflow-hidden rounded-xl bg-surface-container-lowest tonal-depth">
         <div className="grid grid-cols-7 border-b border-outline-variant/10 bg-surface-container-low">
           {WEEKDAYS.map((d) => (
@@ -162,7 +160,6 @@ export default async function CalendarPage({ searchParams }: PageProps) {
         </div>
       </div>
 
-      {/* Upcoming due list */}
       <div className="mt-8">
         <h2 className="mb-3 font-headline text-lg font-bold text-on-surface">Upcoming due dates</h2>
         {due.length > 0 ? (

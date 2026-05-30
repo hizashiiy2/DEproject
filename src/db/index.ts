@@ -5,11 +5,10 @@ import initSqlJs, { type Database, type Statement } from "sql.js";
 import { seedDemoData } from "@/db/seed";
 
 /**
- * Minimal sync SQL surface used by the repository.
- *
- * Backed by sql.js (pure WASM) so the exact same code runs locally and on
- * Vercel. We intentionally do NOT use node:sqlite: it is experimental and is
- * not available on Vercel's Node runtime, which made every server action 500.
+ * Minimal sync SQL surface used by the repository, backed by sql.js (pure WASM)
+ * so the same code runs locally and on the server. We avoid node:sqlite: it is
+ * experimental and flag-gated on Node 22, which 500'd every server action when
+ * the app ran on a serverless host.
  */
 export type SqlStatement = {
   all(...params: unknown[]): unknown[];

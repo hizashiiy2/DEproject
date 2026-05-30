@@ -9,7 +9,7 @@ import {
 import { compareTargetVsActual } from "@/domain/duration";
 import { summariseTiming } from "@/domain/progress";
 import { AcademicBreadcrumb } from "@/components/AcademicBreadcrumb";
-import { MaterialIcon } from "@/components/MaterialIcon";
+import { MaterialIcon, type IconName } from "@/components/MaterialIcon";
 import { SearchInput } from "@/components/SearchInput";
 
 function formatDate(iso: string): string {
@@ -36,7 +36,7 @@ export default async function ProgressPage({ searchParams }: PageProps) {
   // Confidence trend, oldest → newest, capped to a readable window.
   const trend = [...allRuns].reverse().slice(-14);
 
-  const cards = [
+  const cards: { label: string; value: string | number; icon: IconName }[] = [
     { label: "Rehearsals", value: stats.runCount, icon: "history_edu" },
     { label: "Practice minutes", value: practiceMinutes, icon: "timer" },
     {
@@ -75,7 +75,6 @@ export default async function ProgressPage({ searchParams }: PageProps) {
         </div>
       ) : (
         <>
-          {/* Stat cards */}
           <section className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
             {cards.map((c) => (
               <div key={c.label} className="rounded-xl bg-surface-container-lowest p-5 tonal-depth">
@@ -91,7 +90,6 @@ export default async function ProgressPage({ searchParams }: PageProps) {
           </section>
 
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
-            {/* Confidence trend */}
             <section className="rounded-xl bg-surface-container-lowest p-6 tonal-depth">
               <h2 className="mb-1 font-headline text-lg font-bold text-on-surface">Confidence trend</h2>
               <p className="mb-4 text-xs text-on-surface-variant">Most recent {trend.length} runs</p>
@@ -107,7 +105,6 @@ export default async function ProgressPage({ searchParams }: PageProps) {
               </div>
             </section>
 
-            {/* Timing accuracy */}
             <section className="rounded-xl bg-surface-container-lowest p-6 tonal-depth">
               <h2 className="mb-4 font-headline text-lg font-bold text-on-surface">Timing accuracy</h2>
               <div className="grid grid-cols-3 gap-3 text-center">
@@ -127,7 +124,6 @@ export default async function ProgressPage({ searchParams }: PageProps) {
             </section>
           </div>
 
-          {/* Per-presentation breakdown */}
           <section className="mt-8">
             <h2 className="mb-3 font-headline text-lg font-bold text-on-surface">By presentation</h2>
             <div className="overflow-hidden rounded-xl bg-surface-container-lowest tonal-depth">
@@ -157,7 +153,6 @@ export default async function ProgressPage({ searchParams }: PageProps) {
             </div>
           </section>
 
-          {/* Searchable rehearsal log */}
           <section className="mt-8">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <h2 className="font-headline text-lg font-bold text-on-surface">Rehearsal log</h2>

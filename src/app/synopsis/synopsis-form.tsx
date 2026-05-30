@@ -156,7 +156,7 @@ export function SynopsisForm({ initial }: SynopsisFormProps) {
             rows={4}
             value={values.features}
             onChange={(e) => set("features", e.target.value)}
-            placeholder={"One per line, e.g.\nExam Mode timer\nSynopsis Builder\nReadiness dashboard"}
+            placeholder={"One per line, e.g.\nPresenter mode\nVoice rehearsal recorder\nProgress tracking"}
             className={textarea}
           />
           <FieldErrors errors={state?.errors} name="features" />

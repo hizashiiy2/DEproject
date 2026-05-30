@@ -7,10 +7,7 @@ type Props = {
   items: Crumb[];
   variant?: "inline" | "pill" | "text";
   className?: string;
-  /**
-   * Pill only: which segment uses primary emphasis.
-   * `first` matches the marketing landing (brand-first); `last` matches app analytics (current page).
-   */
+  /** Pill only: emphasise the `first` segment (brand) or the `last` (current page). */
   pillAccent?: "first" | "last";
   /** Pill only: visual separator between segments. */
   pillSeparator?: "slash" | "chevron";

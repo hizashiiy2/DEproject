@@ -45,7 +45,6 @@ export function RehearseClient({ presentationId, targetDurationMinutes }: Props)
   const chunksRef = useRef<Blob[]>([]);
   const elapsedRef = useRef(0);
 
-  // Tick the timer while the session is active.
   useEffect(() => {
     if (phase !== "active") return;
     const id = setInterval(() => {
@@ -57,7 +56,6 @@ export function RehearseClient({ presentationId, targetDurationMinutes }: Props)
     return () => clearInterval(id);
   }, [phase]);
 
-  // Clean up the stream and any object URL when the component unmounts.
   useEffect(() => {
     return () => {
       streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -124,7 +122,6 @@ export function RehearseClient({ presentationId, targetDurationMinutes }: Props)
 
   return (
     <div className="space-y-8">
-      {/* Timer */}
       <div className="rounded-xl bg-surface-container-low p-8 text-center">
         <div className="font-mono text-6xl font-bold tracking-tight text-on-surface tabular-nums">
           {formatClock(elapsed)}
@@ -169,7 +166,6 @@ export function RehearseClient({ presentationId, targetDurationMinutes }: Props)
         {micError && <p className="mt-4 text-xs text-on-surface-variant">{micError}</p>}
       </div>
 
-      {/* Live notes */}
       {phase !== "idle" && (
         <div className="rounded-xl bg-surface-container-lowest p-6 tonal-depth">
           <h2 className="mb-3 font-headline text-sm font-bold uppercase tracking-wider text-on-surface-variant">
@@ -217,7 +213,6 @@ export function RehearseClient({ presentationId, targetDurationMinutes }: Props)
         </div>
       )}
 
-      {/* Recording playback (download-only, never uploaded) */}
       {phase === "done" && audioUrl && (
         <div className="rounded-xl bg-surface-container-lowest p-6 tonal-depth">
           <h2 className="mb-3 font-headline text-sm font-bold uppercase tracking-wider text-on-surface-variant">
@@ -238,7 +233,6 @@ export function RehearseClient({ presentationId, targetDurationMinutes }: Props)
         </div>
       )}
 
-      {/* Save the run */}
       {phase === "done" && (
         <form action={formAction} className="rounded-xl bg-surface-container-lowest p-6 tonal-depth">
           <input type="hidden" name="presentationId" value={presentationId} />

@@ -14,7 +14,7 @@ import {
   QA_TOOLS,
 } from "@/domain/readiness";
 import { EXAM_DATE_ISO, daysUntil } from "@/domain/exam";
-import { MaterialIcon } from "@/components/MaterialIcon";
+import { MaterialIcon, type IconName } from "@/components/MaterialIcon";
 
 function formatDate(iso: string): string {
   const d = new Date(`${iso}T12:00:00`);
@@ -44,7 +44,7 @@ export default async function HomePage() {
   const score = readinessScore(checks);
   const days = daysUntil(EXAM_DATE_ISO);
 
-  const headlineStats = [
+  const headlineStats: { label: string; value: string | number; icon: IconName }[] = [
     { label: "Presentations", value: stats.presentationCount, icon: "present_to_all" },
     { label: "Rehearsals", value: stats.runCount, icon: "history_edu" },
     { label: "Practice minutes", value: practiceMinutes, icon: "timer" },
@@ -75,7 +75,6 @@ export default async function HomePage() {
         </Link>
       </header>
 
-      {/* Exam countdown + readiness focus */}
       <section className="academic-gradient mt-6 flex flex-wrap items-center justify-between gap-4 rounded-xl px-6 py-5 text-on-primary">
         <div className="flex items-center gap-4">
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-on-primary/15">
@@ -96,7 +95,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Headline stats */}
       <section className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {headlineStats.map((s) => (
           <div key={s.label} className="rounded-xl bg-surface-container-lowest p-5 tonal-depth">
@@ -112,7 +110,6 @@ export default async function HomePage() {
       </section>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-3">
-        {/* Readiness checklist */}
         <section className="lg:col-span-2 rounded-xl bg-surface-container-lowest p-6 tonal-depth">
           <div className="mb-5 flex items-center justify-between">
             <h2 className="font-headline text-lg font-bold text-on-surface">Readiness checklist</h2>
@@ -140,7 +137,6 @@ export default async function HomePage() {
           </ul>
         </section>
 
-        {/* Jump back in + recent activity */}
         <section className="space-y-6">
           {topPresentation && (
             <div className="rounded-xl bg-surface-container-lowest p-6 tonal-depth">
@@ -196,7 +192,6 @@ export default async function HomePage() {
         </section>
       </div>
 
-      {/* Quality assurance — relevant to the exam's QA topic */}
       <section className="mt-8 rounded-xl bg-surface-container-low p-6">
         <h2 className="mb-4 font-headline text-lg font-bold text-on-surface">Quality assurance</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

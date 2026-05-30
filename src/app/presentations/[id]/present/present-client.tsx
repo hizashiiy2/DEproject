@@ -85,7 +85,6 @@ export function PresentClient({
 
   return (
     <div className="flex min-h-screen flex-col bg-surface text-on-surface">
-      {/* Top bar */}
       <div className="flex items-center justify-between gap-4 px-6 py-4 sm:px-10">
         <div className="min-w-0">
           <div className="truncate font-headline text-sm font-bold text-on-surface-variant">
@@ -104,7 +103,6 @@ export function PresentClient({
         </Link>
       </div>
 
-      {/* Current section */}
       <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
         <div className="text-sm font-bold uppercase tracking-[0.3em] text-primary">
           Now presenting
@@ -124,7 +122,6 @@ export function PresentClient({
           {sectionOver && " · over time"}
         </div>
 
-        {/* Next-up preview */}
         {index < slides.length - 1 && (
           <div className="mt-10 text-sm text-on-surface-variant">
             <span className="font-bold uppercase tracking-wider">Next:</span>{" "}
@@ -133,7 +130,6 @@ export function PresentClient({
         )}
       </div>
 
-      {/* Progress dots */}
       <div className="flex justify-center gap-2 px-6 pb-2">
         {slides.map((s, i) => (
           <span
@@ -146,7 +142,6 @@ export function PresentClient({
         ))}
       </div>
 
-      {/* Controls */}
       <div className="flex items-center justify-between gap-4 border-t border-outline-variant/10 px-6 py-4 sm:px-10">
         <div className="text-sm tabular-nums">
           <span className={totalOver ? "font-bold text-error" : "font-bold text-on-surface"}>

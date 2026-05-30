@@ -37,7 +37,6 @@ export default async function SynopsisPrintPage() {
   return (
     <div className="min-h-screen bg-surface print:bg-white">
       <div className="mx-auto max-w-3xl px-6 py-10 print:px-0 print:py-0">
-        {/* Toolbar — hidden when printing */}
         <div className="mb-6 flex items-center justify-between print:hidden">
           <Link
             href="/synopsis"
@@ -49,7 +48,6 @@ export default async function SynopsisPrintPage() {
           <PrintButton />
         </div>
 
-        {/* The printable document */}
         <article className="rounded-xl bg-white p-10 text-black tonal-depth print:rounded-none print:p-0 print:shadow-none">
           <header className="border-b-2 border-black/80 pb-4">
             <h1 className="font-headline text-3xl font-extrabold tracking-tight">{s.title}</h1>
