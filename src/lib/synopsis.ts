@@ -34,3 +34,24 @@ export function buildSynopsisMarkdown(data: SynopsisInput): string {
 
   return lines.join("\n");
 }
+
+/**
+ * Splits free text into Markdown bullets. Each non-empty line (or comma-separated
+ * item on a single line) becomes one bullet, so the form accepts either style.
+ */
+function toBulletList(raw: string): string[] {
+  const byLine = raw
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+
+  const items =
+    byLine.length > 1
+      ? byLine
+      : raw
+          .split(",")
+          .map((part) => part.trim())
+          .filter((part) => part.length > 0);
+
+  return items.map((item) => `- ${item.replace(/^[-*]\s*/, "")}`);
+}
