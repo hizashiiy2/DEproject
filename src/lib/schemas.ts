@@ -46,6 +46,27 @@ export const rehearsalRunCreateSchema = z.object({
   sessionType: z.string().max(80).optional().default(""),
 });
 
+/**
+ * Validates the 1-page exam synopsis before it can be generated/exported.
+ * Empty optional URLs are allowed so the form can be saved as a draft.
+ */
+export const synopsisSchema = z.object({
+  title: z.string().min(1, "Project title is required").max(200),
+  description: z
+    .string()
+    .min(20, "Description should be at least 20 characters")
+    .max(2000),
+  topicOne: z.string().min(1, "Choose your first course topic").max(120),
+  topicTwo: z.string().min(1, "Choose your second course topic").max(120),
+  features: z.string().min(1, "List your main prototype features").max(2000),
+  technologies: z.string().min(1, "List the technologies used").max(1000),
+  githubUrl: z
+    .union([z.string().url("Enter a valid URL"), z.literal("")])
+    .optional()
+    .default(""),
+  reflection: z.string().max(2000).optional().default(""),
+});
+
 export type PresentationCreateInput = z.infer<typeof presentationCreateSchema>;
 export type PresentationUpdateInput = z.infer<typeof presentationUpdateSchema>;
 export type SectionCreateInput = z.infer<typeof sectionCreateSchema>;
