@@ -12,3 +12,13 @@ export type ExamPhase =
   | "dialogue"
   | "evaluation"
   | "complete";
+
+/** Timed phases and their official DE exam allocation, in seconds. */
+export const EXAM_PHASE_SECONDS: Record<
+  "presentation" | "dialogue" | "evaluation",
+  number
+> = {
+  presentation: 10 * 60,
+  dialogue: 5 * 60,
+  evaluation: 5 * 60,
+};
