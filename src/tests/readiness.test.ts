@@ -38,3 +38,25 @@ describe("computeReadiness", () => {
     expect(checkById({ ...fullyReady, rehearsalCount: 0 }, "rehearsal").done).toBe(false);
   });
 });
+
+describe("readinessScore", () => {
+  it("reports 100% when everything is done", () => {
+    const score = readinessScore(computeReadiness(fullyReady));
+    expect(score.completed).toBe(score.total);
+    expect(score.percent).toBe(100);
+  });
+
+  it("reports a partial percentage", () => {
+    const score = readinessScore(
+      computeReadiness({
+        hasSynopsis: false,
+        topicCount: 0,
+        presentationCount: 0,
+        sectionCount: 0,
+        rehearsalCount: 0,
+      }),
+    );
+    expect(score.completed).toBe(0);
+    expect(score.percent).toBe(0);
+  });
+});
