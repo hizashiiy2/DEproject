@@ -94,3 +94,26 @@ export type QaTool = {
   command: string;
   description: string;
 };
+
+export const QA_TOOLS: readonly QaTool[] = [
+  {
+    label: "Linting passed",
+    command: "eslint",
+    description: "ESLint enforces code-style and catches common mistakes.",
+  },
+  {
+    label: "TypeScript check passed",
+    command: "tsc --noEmit",
+    description: "Static type checking across the whole codebase.",
+  },
+  {
+    label: "Tests added",
+    command: "vitest run",
+    description: "Unit tests for timer, synopsis and readiness logic.",
+  },
+  {
+    label: "Build successful",
+    command: "next build",
+    description: "Production build verification with Next.js.",
+  },
+] as const;
