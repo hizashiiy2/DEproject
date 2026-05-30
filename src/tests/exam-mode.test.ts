@@ -47,3 +47,11 @@ describe("phaseDurationSeconds", () => {
     expect(phaseDurationSeconds("complete")).toBe(0);
   });
 });
+
+describe("isWarning", () => {
+  it("warns in the final stretch but not before", () => {
+    expect(isWarning(120, 600)).toBe(false);
+    expect(isWarning(45, 600)).toBe(true);
+    expect(isWarning(0, 600)).toBe(false);
+  });
+});
