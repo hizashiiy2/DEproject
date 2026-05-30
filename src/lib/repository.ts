@@ -196,6 +196,75 @@ export function listRehearsalExportRows(): RehearsalExportRow[] {
     .all() as RehearsalExportRow[];
 }
 
+export type SynopsisRow = {
+  title: string;
+  description: string;
+  topicOne: string;
+  topicTwo: string;
+  features: string;
+  technologies: string;
+  githubUrl: string;
+  reflection: string;
+  updatedAt: string;
+};
+
+/** The synopsis is a singleton: the app tracks one exam synopsis at a time. */
+const SYNOPSIS_ID = "singleton";
+
+export function getSynopsis(): SynopsisRow | undefined {
+  const database = getDb();
+  const row = database
+    .prepare(
+      `SELECT title, description, topicOne, topicTwo, features, technologies, githubUrl, reflection, updatedAt
+       FROM synopsis WHERE id = ?`,
+    )
+    .get(SYNOPSIS_ID) as SynopsisRow | undefined;
+  if (!row) return undefined;
+  return {
+    title: String(row.title),
+    description: String(row.description),
+    topicOne: String(row.topicOne),
+    topicTwo: String(row.topicTwo),
+    features: String(row.features),
+    technologies: String(row.technologies),
+    githubUrl: String(row.githubUrl),
+    reflection: String(row.reflection),
+    updatedAt: String(row.updatedAt),
+  };
+}
+
+export function upsertSynopsis(row: Omit<SynopsisRow, "updatedAt">): void {
+  const database = getDb();
+  const updatedAt = new Date().toISOString();
+  database
+    .prepare(
+      `INSERT INTO synopsis (id, title, description, topicOne, topicTwo, features, technologies, githubUrl, reflection, updatedAt)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+       ON CONFLICT(id) DO UPDATE SET
+         title = excluded.title,
+         description = excluded.description,
+         topicOne = excluded.topicOne,
+         topicTwo = excluded.topicTwo,
+         features = excluded.features,
+         technologies = excluded.technologies,
+         githubUrl = excluded.githubUrl,
+         reflection = excluded.reflection,
+         updatedAt = excluded.updatedAt`,
+    )
+    .run(
+      SYNOPSIS_ID,
+      row.title,
+      row.description,
+      row.topicOne,
+      row.topicTwo,
+      row.features,
+      row.technologies,
+      row.githubUrl,
+      row.reflection,
+      updatedAt,
+    );
+}
+
 export function getDashboardStats(): DashboardStats {
   const database = getDb();
   const presentationCount = (
